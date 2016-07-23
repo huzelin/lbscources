@@ -1,0 +1,9 @@
+package mod;
+
+message ModUpdateRequest {
+  required string id        = 1;
+  optional double lon       = 2;
+  optional double lat       = 3;
+  optional double speed     = 4;
+  optional int64  timestamp = 5;
+}
