@@ -5,7 +5,7 @@ SUBDIRS = common proto simulator server
 all : clean
 	@for X in $(SUBDIRS); \
         do \
-	  cd $$X; make VERSION=$(VERSION); cd -; \
+	  cd $$X; make ; cd -; \
 	done
 
 clean :
