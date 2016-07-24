@@ -1,8 +1,13 @@
 #!/bin/sh
-
 set x
 
-echo "kill current server"
-killall server
+PID=`pidof server`
+
+if [ -z $PID ]; then
+	echo "server is not running"
+else
+	killall server
+	echo "simulator is killed"
+fi
 
 
