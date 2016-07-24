@@ -1,13 +1,3 @@
-ifeq ($(VERSION), debug)
-	DEBUG_DEF = -g -D_DEBUG
-else
-ifeq ($(VERSION), release)
-	DEBUG_DEF = -O2
-else
-	DEBUG_DEF = -g -O2
-endif
-endif
-
 INCLUDE = -I../../ \
 
 CPPFLAGS = -Wall -fPIC $(INCLUDE) $(DEBUG_DEF) -std=c++11
@@ -18,7 +8,7 @@ all : clean $(LIBS)
 clean:
 	rm -rf *.o *.a
 
-libgrid.a: index.o hash-table.o nn-heap.o grid.o 
+libgrid.a: lbs_bitmap.o lbs_hashtable.o lbs_nn_heap.o lbs_grid.o lbs_index.o
 	ar cr $@ $^
 
 .o : .cpp

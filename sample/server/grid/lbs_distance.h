@@ -1,5 +1,5 @@
-#ifndef SERVER_GRID_DISTANCE_H_
-#define SERVER_GRID_DISTANCE_H_
+#ifndef SERVER_GRID_LBS_DISTANCE_H_
+#define SERVER_GRID_LBS_DISTANCE_H_
 
 #include <math.h>
 
@@ -7,7 +7,7 @@
 #define DEG2RAD(degree) (degree * PI) / 180.0
 #define EARTH_RADIUS 6378.137
 
-double Distance(double lon1, double lat1, double lon2, double lat2) {
+double lbs_distance(double lon1, double lat1, double lon2, double lat2) {
   double rad_lat1 = DEG2RAD(lat1);
   double rad_lat2 = DEG2RAD(lat2);
 
@@ -20,4 +20,4 @@ double Distance(double lon1, double lat1, double lon2, double lat2) {
   return s;
 }
 
-#endif  // MOD_MOD_SERVER_GRID_DISTANCE_H_
+#endif  // SERVER_GRID_LBS_DISTANCE_H_

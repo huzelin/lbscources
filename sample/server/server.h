@@ -7,7 +7,7 @@
 #include "event.h"
 #include "evhtp.h"
 
-#include "server/grid/index.h"
+#include "server/grid/lbs_index.h"
 
 namespace mod {
 
@@ -37,7 +37,7 @@ class Server {
   void ProcessQuery(evhtp_request_t* request);
 
   // 检索结果拼装
-  void AssembleResult(evhtp_request_t* request, ResNode* res_node, uint64_t time);
+  void AssembleResult(evhtp_request_t* request, lbs_res_node_t* res_node, uint64_t time);
 
   // ip
   std::string ip_;
