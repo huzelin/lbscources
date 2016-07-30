@@ -10,7 +10,7 @@
 namespace mod {
 
 bool Server::Start() {
-  GridIndex_Init();
+  lbs_grid_index_init();
   if (!StartHttpServer()) {
     LOG_ERROR("start http server failed");
     return false;
@@ -67,7 +67,7 @@ void Server::ProcessUpdate(evhtp_request_t* request) {
       double lat = mod_update_request.lat();
       uint64_t timestamp = mod_update_request.timestamp();
       uint32_t id = boost::lexical_cast<uint32_t>(mod_update_request.id());
-      GridIndex_Update(lon, lat, timestamp, id);
+      lbs_grid_index_update(lon, lat, timestamp, id);
       LOG_DEBUG("accpet mod update, id=%d, lon=%f, lat=%f, timestamp=%ld",
                 id, lon, lat, timestamp);
     }
@@ -87,14 +87,14 @@ void Server::ProcessQuery(evhtp_request_t* request) {
     evhtp_send_reply(request, EVHTP_RES_OK);
     evhtp_request_resume(request);
   }
-  ResNode res_node;
-  QUEUE_INIT(&(res_node.queue));
+  lbs_res_node_t res_node;
+  lbs_queue_init(&(res_node.queue));
   if (strcmp(query.query_type().c_str(), kRangeQuery.c_str()) == 0) {
     // Range查询
     double lon1, lon2, lat1,lat2;
     query.GetRange(lon1, lon2, lat1, lat2);
     uint64_t time_start = common::GetTime(); 
-    GridIndex_RangeQuery(lon1, lon2, lat1, lat2, &res_node);
+    lbs_grid_index_range_query(lon1, lon2, lat1, lat2, &res_node);
     uint64_t time_end = common::GetTime();
     AssembleResult(request, &res_node, time_end - time_start);
   } else if (strcmp(query.query_type().c_str(), kNNQuery.c_str()) == 0) {
@@ -102,7 +102,7 @@ void Server::ProcessQuery(evhtp_request_t* request) {
     double lon, lat;
     query.GetPos(lon, lat);
     uint64_t time_start = common::GetTime();
-    GridIndex_NNQuery(lon, lat, &res_node);
+    lbs_grid_index_nn_query(lon, lat, &res_node);
     uint64_t time_end = common::GetTime();
     AssembleResult(request, &res_node, time_end - time_start);
   } else {
@@ -113,12 +113,12 @@ void Server::ProcessQuery(evhtp_request_t* request) {
 }
 
 // range query
-void Server::AssembleResult(evhtp_request_t* request, ResNode* res_node, uint64_t time) {
+void Server::AssembleResult(evhtp_request_t* request, lbs_res_node_t* res_node, uint64_t time) {
   json_t* data_array = json_array();
-  Queue* head        = &(res_node->queue);
-  Queue* p           = head->next;
+  lbs_queue_t* head  = &(res_node->queue);
+  lbs_queue_t* p     = head->next;
   for (; p != head;) {
-    ResNode* rn = (ResNode*)(p);
+    lbs_res_node_t* rn = (lbs_res_node_t*)(p);
     json_t* new_doc = json_object();
     // set id
     json_object_set_new(new_doc, "id", json_integer(rn->id));

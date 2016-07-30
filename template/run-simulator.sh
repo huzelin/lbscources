@@ -1,8 +1,8 @@
 #!/bin/sh
 set x
 
-echo "kill current simulator"
-killall simulator
+
+sh stop-simulator.sh
 
 echo "run simulator"
 nohup ./simulator/simulator ./conf/simulator.conf &

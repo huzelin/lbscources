@@ -1,21 +1,6 @@
 #Macros
 SUBDIRS = grid 
 
-#Actions
-all : clean
-	@for X in $(SUBDIRS); \
-        do \
-	  cd $$X; make VERSION=$(VERSION); cd -; \
-	done
-
-clean :
-	@for X in $(SUBDIRS); \
-	do \
-	  cd $$X; make clean; cd -; \
-	done
-
-#
-#
 INCLUDE = -I../ \
 
 CPPFLAGS = -Wall -fPIC $(INCLUDE) $(DEBUG_DEF) -std=c++11
@@ -28,10 +13,20 @@ LIBS = ../common/libcommon.a \
        /usr/local/lib/libjansson.a -lpthread -lprotobuf
 EXE = server
 
-all : clean $(EXE)
+all : clean subbuild $(EXE)
+
+subbuild :
+	@for X in $(SUBDIRS); \
+        do \
+	  cd $$X; make ; cd -; \
+	done
 
 clean :
 	rm -rf $(EXE) *.o
+	@for X in $(SUBDIRS); \
+	do \
+	  cd $$X; make clean; cd -; \
+	done
 
 ## server
 server : query.o server.o main.o

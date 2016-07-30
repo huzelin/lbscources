@@ -1,7 +1,13 @@
 #!/bin/sh
 set x
 
-echo "kill current simulator"
-killall simulator
+PID=`pidof simulator`
+
+if [ -z $PID ]; then
+	echo "simulator is not running"
+else
+	killall simulator
+	echo "simulator is killed"
+fi
 
 

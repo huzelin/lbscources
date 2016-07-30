@@ -1,13 +1,3 @@
-ifeq ($(VERSION), debug)
-	DEBUG_DEF = -g -D_DEBUG
-else
-ifeq ($(VERSION), release)
-	DEBUG_DEF = -O2
-else
-	DEBUG_DEF = -g -O2
-endif
-endif
-
 INCLUDE = -I../ \
 
 CPPFLAGS = -Wall -fPIC $(INCLUDE) $(DEBUG_DEF) -std=c++11

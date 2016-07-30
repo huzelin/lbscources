@@ -3,7 +3,7 @@
 set x
 
 echo "kill current server"
-killall server
+sh stop-server.sh
 
-nohup ./server/server ./conf/server.conf &
+nohup ./server/server ./conf/server.conf & 
 
