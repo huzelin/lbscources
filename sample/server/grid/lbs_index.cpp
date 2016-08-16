@@ -84,96 +84,29 @@ int lbs_grid_index_range_query(double lon1,
 //  4   5
 //  6 7 8
 static void lbs_add_extension(lbs_nnheap_t* lbs_nnheap, lbs_bitmap_t* lbs_bitmap, int cell_id, double lon0, double lat0) {
-  int row, col, id;
-  double lat, lon, distance;
   lbs_mov_node_t* node = NULL;
+  int id[8] = { cell_id + lbs_grid.col_num - 1,   // position 1
+                cell_id + lbs_grid.col_num,       // posiiton 2
+                cell_id + lbs_grid.col_num + 1,   // position 3
+                cell_id - 1,                      // position 4
+                cell_id + 1,                      // position 5
+                cell_id - lbs_grid.col_num - 1,   // position 6
+                cell_id - lbs_grid.col_num,       // position 7
+                cell_id - lbs_grid.col_num + 1    // position 8
+              };
 
-  // Position: 1
-  id     = cell_id + lbs_grid.col_num - 1;
-  if (id >= 0 && id < lbs_grid.row_num * lbs_grid.col_num && lbs_bitmap_isset(lbs_bitmap, id) == 0) { 
-    lbs_grid_cell_row_col(&lbs_grid, id, &row, &col);
-    lat = row * lbs_grid.cell_height + lbs_grid.lat_min;
-    lon = (col + 1) * lbs_grid.cell_width + lbs_grid.lon_min;
-    distance = lbs_distance(lon0, lat0, lon, lat);
-    node = (lbs_mov_node_t*)(&(lbs_grid.cell[id].dammy_node));
-    lbs_nnheap_insert(lbs_nnheap, node, id, 1, distance);
-  }
-
-  // Position: 2
-  id         = cell_id + lbs_grid.col_num;
-  if (id >= 0 && id < lbs_grid.row_num * lbs_grid.col_num && lbs_bitmap_isset(lbs_bitmap, id) == 0) { 
-    lbs_grid_cell_row_col(&lbs_grid, id, &row, &col);
-    lat = row * lbs_grid.cell_height + lbs_grid.lat_min;
-    lon = lon0;
-    distance = lbs_distance(lon0, lat0, lon, lat);
-    node = (lbs_mov_node_t*)(&(lbs_grid.cell[id].dammy_node));
-    lbs_nnheap_insert(lbs_nnheap, node, id, 1, distance);
-  }
-
-  // Position: 3
-  id         = cell_id + lbs_grid.col_num + 1;
-  if (id >= 0 && id < lbs_grid.row_num * lbs_grid.col_num && lbs_bitmap_isset(lbs_bitmap, id) == 0) {
-    lbs_grid_cell_row_col(&lbs_grid, id, &row, &col);
-    lat = row * lbs_grid.cell_height + lbs_grid.lat_min;
-    lon = col * lbs_grid.cell_width + lbs_grid.lon_min;
-    distance = lbs_distance(lon0, lat0, lon, lat);
-    node = (lbs_mov_node_t*)(&(lbs_grid.cell[id].dammy_node));
-    lbs_nnheap_insert(lbs_nnheap, node, id, 1, distance);
-  }
-
-  // Position: 4
-  id         = cell_id - 1;
-  if (id >= 0 && id < lbs_grid.row_num * lbs_grid.col_num && lbs_bitmap_isset(lbs_bitmap, id) == 0) {
-    lbs_grid_cell_row_col(&lbs_grid, id, &row, &col);
-    lat = lat0;
-    lon = (col + 1) * lbs_grid.cell_width + lbs_grid.lon_min;
-    distance = lbs_distance(lon0, lat0, lon, lat);
-    node = (lbs_mov_node_t*)(&(lbs_grid.cell[id].dammy_node));
-    lbs_nnheap_insert(lbs_nnheap, node, id, 1, distance);
-  }
-
-  // Position: 5
-  id         = cell_id + 1;
-  if (id >= 0 && id < lbs_grid.row_num * lbs_grid.col_num && lbs_bitmap_isset(lbs_bitmap, id) == 0) {
-    lbs_grid_cell_row_col(&lbs_grid, id, &row, &col);
-    lat = lat0;
-    lon = col * lbs_grid.cell_width + lbs_grid.lon_min;
-    distance = lbs_distance(lon0, lat0, lon, lat);
-    node = (lbs_mov_node_t*)(&(lbs_grid.cell[id].dammy_node));
-    lbs_nnheap_insert(lbs_nnheap, node, id, 1, distance);
-  }
-
-  // Position: 6
-  id         = cell_id - lbs_grid.col_num - 1;
-  if (id >= 0 && id < lbs_grid.row_num * lbs_grid.col_num && lbs_bitmap_isset(lbs_bitmap, id) == 0) {
-    lbs_grid_cell_row_col(&lbs_grid, id, &row, &col);
-    lat = (row + 1) * lbs_grid.cell_height + lbs_grid.lat_min;
-    lon = (col + 1) * lbs_grid.cell_width + lbs_grid.lon_min;
-    distance = lbs_distance(lon0, lat0, lon, lat);
-    node = (lbs_mov_node_t*)(&(lbs_grid.cell[id].dammy_node));
-    lbs_nnheap_insert(lbs_nnheap, node, id, 1, distance);
-  }
-
-  // Position: 7
-  id         = cell_id - lbs_grid.col_num;
-  if (id >= 0 && id < lbs_grid.row_num * lbs_grid.col_num && lbs_bitmap_isset(lbs_bitmap, id) == 0) {
-    lbs_grid_cell_row_col(&lbs_grid, id, &row, &col);
-    lon = lon0;
-    lat = (row + 1) * lbs_grid.cell_height + lbs_grid.lat_min;
-    distance = lbs_distance(lon0, lat0, lon, lat);
-    node = (lbs_mov_node_t*)(&(lbs_grid.cell[id].dammy_node));
-    lbs_nnheap_insert(lbs_nnheap, node, id, 1, distance);
-  }
-
-  // Position: 8
-  id         = cell_id - lbs_grid.col_num + 1;
-  if (id >= 0 && id < lbs_grid.row_num * lbs_grid.col_num && lbs_bitmap_isset(lbs_bitmap, id) == 0) {
-    lbs_grid_cell_row_col(&lbs_grid, id, &row, &col);
-    lat = (row + 1) * lbs_grid.cell_height + lbs_grid.lat_min;
-    lon = col * lbs_grid.cell_width + lbs_grid.lon_min;
-    distance = lbs_distance(lon0, lat0, lon, lat);
-    node = (lbs_mov_node_t*)(&(lbs_grid.cell[id].dammy_node));
-    lbs_nnheap_insert(lbs_nnheap, node, id, 1, distance);
+  for (int i = 0; i < 8; ++i) {
+    if (id[i] < 0 || id[i] >= lbs_grid.row_num * lbs_grid.col_num || lbs_bitmap_isset(lbs_bitmap, id[i]))
+      continue;
+    int row, col;
+    lbs_grid_cell_row_col(&lbs_grid, id[i], &row, &col);
+    double lat1 = row * lbs_grid.cell_height + lbs_grid.lat_min;
+    double lat2 = lat1 + lbs_grid.cell_height;
+    double lon1 = col * lbs_grid.cell_width + lbs_grid.lon_min;
+    double lon2 = lon1 + lbs_grid.cell_width;
+    double distance = lbs_min_distance(lon1, lat1, lon2, lat2, lon0, lat0);
+    node = (lbs_mov_node_t*)(&(lbs_grid.cell[id[i]].dammy_node));
+    lbs_nnheap_insert(lbs_nnheap, node, id[i], 1, distance);
   }
 }
 
@@ -231,5 +164,6 @@ int lbs_grid_index_nn_query(double lon, double lat, lbs_res_node_t* out) {
      break;
    }
  }
+ lbs_bitmap_destroy(&lbs_bitmap);
  return lbs_nnheap_destroy(&lbs_nnheap);
 }

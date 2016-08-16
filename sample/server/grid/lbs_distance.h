@@ -20,4 +20,32 @@ double lbs_distance(double lon1, double lat1, double lon2, double lat2) {
   return s;
 }
 
+double lbs_min_distance(double lon1, double lon2, double lat1, double lat2, double lon, double lat) {
+  if (lon <= lon1) {
+    if (lat <= lat1) {
+      return lbs_distance(lon, lat, lon1, lat1); 
+    } else if (lat >= lat2) {
+      return lbs_distance(lon, lat, lon1, lat2);
+    } else {
+      return lbs_distance(lon, lat, lon1, lat);
+    }
+  } else if (lon >= lon2) {
+    if (lat <= lat1) {
+      return lbs_distance(lon, lat, lon2, lat1);
+    } else if (lat >= lat2) {
+      return lbs_distance(lon, lat, lon2, lat2);
+    } else {
+      return lbs_distance(lon, lat, lon2, lat);
+    }
+  } else {
+    if (lat <= lat1) {
+      return lbs_distance(lon, lat, lon, lat1);
+    } else if (lat >= lat2) {
+      return lbs_distance(lon, lat, lon, lat2);
+    } else {
+      return 0;
+    }
+  }
+}
+
 #endif  // SERVER_GRID_LBS_DISTANCE_H_
